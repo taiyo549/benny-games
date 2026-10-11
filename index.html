@@ -1,0 +1,217 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Benny Games</title>
+<link rel="icon" href="images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans:wght@400;600&family=VT323&display=swap">
+<style>
+/* Mise en page : bandeau launcher (texte + ecran CRT), puis une fiche par jeu, puis l'installation.
+   Look unique, sombre (horreur PSX) : couleurs definies ici. */
+:root {
+  --fond: #0d0b0b;
+  --panneau: #171312;
+  --trait: #3a2622;
+  --os: #e1dcc8;
+  --gris: #968c84;
+  --sang: #b8231c;
+  --sang-clair: #e0453b;
+  --radio: #93d65c;
+  --titre: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --texte: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --hud: "VT323", "Consolas", "Courier New", monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--fond); color: var(--os); font-family: var(--texte); font-size: 16px; line-height: 1.55; }
+body::after { /* lignes de balayage facon ecran cathodique */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.18) 0 1px, transparent 1px 3px);
+}
+.cadre { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+a { color: var(--sang-clair); }
+img { max-width: 100%; height: auto; display: block; image-rendering: pixelated; }
+
+header { border-bottom: 1px solid var(--trait); }
+header .cadre { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; flex-wrap: wrap; }
+.logo { font-family: var(--titre); font-size: 28px; letter-spacing: .04em; color: var(--os); text-decoration: none; line-height: 1; }
+.logo span { color: var(--sang); }
+nav { display: flex; gap: 22px; font-family: var(--hud); font-size: 22px; }
+nav a { color: var(--gris); text-decoration: none; }
+nav a:hover, nav a:focus-visible { color: var(--os); }
+
+.bouton {
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px;
+  font-family: var(--titre); font-size: 22px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--os); background: var(--sang); border: 2px solid var(--sang-clair); text-decoration: none; cursor: pointer;
+  box-shadow: 4px 4px 0 #000;
+}
+.bouton:hover, .bouton:focus-visible { background: var(--sang-clair); outline: none; }
+.bouton.second { background: transparent; border-color: var(--trait); box-shadow: none; }
+.bouton.second:hover, .bouton.second:focus-visible { border-color: var(--os); }
+.bouton[aria-disabled="true"] { background: #241c1a; border-color: var(--trait); color: var(--gris); cursor: not-allowed; box-shadow: none; }
+.note { font-family: var(--hud); font-size: 19px; color: var(--gris); }
+
+/* --- bandeau launcher */
+.haut { padding-block: 56px 64px; }
+.haut .cadre { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; align-items: center; }
+.etiquette { font-family: var(--hud); font-size: 22px; color: var(--sang-clair); letter-spacing: .08em; }
+h1 { font-family: var(--titre); font-weight: 400; font-size: clamp(44px, 7vw, 76px); line-height: .95; margin: 8px 0 18px; text-wrap: balance; text-transform: uppercase; }
+.haut p { color: #c9c2b2; max-width: 46ch; margin: 0 0 26px; }
+.actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.crt { background: #050404; border: 2px solid var(--trait); padding: 10px; box-shadow: 0 0 0 6px #120e0d, 10px 10px 0 #000; }
+.crt img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.crt .legende { font-family: var(--hud); color: var(--gris); font-size: 18px; padding-top: 8px; display: flex; justify-content: space-between; gap: 10px; }
+.rec { color: var(--sang-clair); }
+@media (prefers-reduced-motion: no-preference) { .rec { animation: clign 1.2s steps(2) infinite; } }
+@keyframes clign { 50% { opacity: 0; } }
+
+/* --- jeux */
+section { padding-block: 56px; border-top: 1px solid var(--trait); }
+h2 { font-family: var(--titre); font-weight: 400; font-size: 40px; letter-spacing: .03em; margin: 0 0 28px; text-transform: uppercase; }
+h2 small { font-family: var(--hud); font-size: 22px; color: var(--gris); letter-spacing: 0; margin-left: 12px; text-transform: none; }
+.jeu { background: var(--panneau); border: 1px solid var(--trait); }
+.jeu > img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--trait); }
+.fiche { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 36px; padding: 28px; }
+.fiche h3 { font-family: var(--titre); font-weight: 400; font-size: 46px; line-height: 1; margin: 0 0 8px; }
+.meta { font-family: var(--hud); font-size: 20px; color: var(--sang-clair); margin-bottom: 14px; }
+.fiche p { margin: 0 0 14px; color: #cfc8b8; white-space: pre-line; }
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.points li { padding-left: 22px; position: relative; color: #cfc8b8; }
+.points li::before { content: "☢"; position: absolute; left: 0; color: var(--radio); }
+.cote { display: flex; flex-direction: column; gap: 14px; }
+.cote .bouton { justify-content: center; }
+.captures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 0 28px 28px; }
+.captures img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--trait); }
+.captures figure { margin: 0; }
+.captures figcaption { font-family: var(--hud); font-size: 18px; color: var(--gris); padding-top: 4px; }
+.bientot { margin-top: 18px; border: 1px dashed var(--trait); padding: 26px; font-family: var(--hud); font-size: 22px; color: var(--gris); text-align: center; }
+
+/* --- installation */
+.etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: e; }
+.etapes li { counter-increment: e; background: var(--panneau); border: 1px solid var(--trait); padding: 20px; }
+.etapes li::before { content: counter(e); display: block; font-family: var(--titre); font-size: 44px; color: var(--sang); line-height: 1; margin-bottom: 8px; }
+.etapes strong { display: block; margin-bottom: 4px; }
+.etapes span { color: var(--gris); font-size: 15px; }
+.config { font-family: var(--hud); font-size: 18px; color: var(--gris); margin-top: 22px; }
+
+footer { border-top: 1px solid var(--trait); padding-block: 28px; font-family: var(--hud); font-size: 19px; color: var(--gris); }
+
+@media (max-width: 820px) {
+  .haut .cadre, .fiche { grid-template-columns: minmax(0, 1fr); }
+  .captures, .etapes { grid-template-columns: minmax(0, 1fr); }
+  .fiche { padding: 20px; }
+  .captures { padding: 0 20px 20px; }
+}
+</style>
+
+<header>
+  <div class="cadre">
+    <a class="logo" href="#haut">BENNY <span>GAMES</span></a>
+    <nav><a href="#jeux">Jeux</a><a href="#launcher">Launcher</a><a href="#installer">Installer</a></nav>
+  </div>
+</header>
+
+<main id="haut">
+  <div class="haut" id="launcher">
+    <div class="cadre">
+      <div>
+        <div class="etiquette">// LAUNCHER WINDOWS</div>
+        <h1>Tous mes jeux, un seul launcher.</h1>
+        <p>Le launcher télécharge mes jeux, les installe et les met à jour tout seul. Tu cliques sur « Jouer », il s'occupe du reste. Quand un nouveau jeu sort, il apparaît directement dans ta liste.</p>
+        <div class="actions">
+          <a class="bouton" id="btn-launcher" href="#">Télécharger le launcher</a>
+          <span class="note" id="info-launcher">Windows 10 / 11</span>
+        </div>
+      </div>
+      <figure class="crt" style="margin:0">
+        <img src="images/launcher.jpg" alt="Le launcher : liste des jeux à gauche, fiche de Zone 7 à droite avec le bouton Télécharger" width="1280" height="720">
+        <figcaption class="legende"><span>BENNY-GAMES.EXE</span><span class="rec">● REC</span></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section id="jeux">
+    <div class="cadre">
+      <h2>Les jeux <small id="nb-jeux"></small></h2>
+      <div id="liste-jeux"></div>
+      <div class="bientot">Prochain jeu en préparation…</div>
+    </div>
+  </section>
+
+  <section id="installer">
+    <div class="cadre">
+      <h2>Installer</h2>
+      <ol class="etapes">
+        <li><strong>Télécharge le launcher</strong><span>Un seul fichier .zip, à décompresser où tu veux.</span></li>
+        <li><strong>Lance Launcher.exe</strong><span>Si Windows affiche « Windows a protégé votre ordinateur », clique sur « Informations complémentaires » puis « Exécuter quand même ».</span></li>
+        <li><strong>Choisis un jeu</strong><span>Télécharger, puis Jouer. Les mises à jour arrivent toutes seules.</span></li>
+      </ol>
+      <p class="config">Tu préfères sans launcher ? Chaque jeu se télécharge aussi seul, depuis sa fiche.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="cadre">BENNY GAMES · jeux indépendants façon PS1 · <span id="annee"></span></div>
+</footer>
+
+<script>
+// Catalogue de secours (le site lit d'abord catalogue.json, le meme fichier que le launcher)
+const SECOURS = {
+  launcher: { version: "1.0", taille: "33 Mo", telechargement: "" },
+  jeux: [{
+    id: "zone7", nom: "Zone 7", genre: "Survivor-like · PSX · Horreur", version: "1.0", taille: "36 Mo", sortie: "2026",
+    description: "1987. Une ville fermée d'Ukraine soviétique, un réacteur qui a cessé d'être une machine. Tu es le liquidateur 4471 : survis à 20 vagues de mutants, de zombies de laboratoire et de cyborgs lunaires.",
+    points: ["3 cartes : la ville, le laboratoire Rassvet, la base lunaire Selena-7", "Un boss final par carte, avec une seconde phase", "Plus de 20 armes et capacités, améliorations permanentes", "Mode infini, 27 succès, français et anglais"],
+    image: "images/zone7_couverture.jpg",
+    captures: ["images/zone7_ville.jpg", "images/zone7_labo.jpg", "images/zone7_lune.jpg"],
+    telechargement: ""
+  }]
+};
+const LEGENDES = ["La ville", "Le laboratoire Rassvet", "La base lunaire Selena-7"];
+
+function lien(a, url, texte) {
+  if (url) { a.href = url; a.textContent = texte; a.removeAttribute("aria-disabled"); }
+  else { a.removeAttribute("href"); a.setAttribute("aria-disabled", "true"); a.textContent = "Bientôt en ligne"; }
+}
+function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+function afficher(cat) {
+  lien(document.getElementById("btn-launcher"), cat.launcher && cat.launcher.telechargement, "Télécharger le launcher");
+  if (cat.launcher && cat.launcher.taille) document.getElementById("info-launcher").textContent = "Windows 10 / 11 · " + cat.launcher.taille + " · v" + cat.launcher.version;
+  const liste = document.getElementById("liste-jeux");
+  liste.replaceChildren();
+  document.getElementById("nb-jeux").textContent = cat.jeux.length + (cat.jeux.length > 1 ? " jeux" : " jeu");
+  for (const j of cat.jeux) {
+    const art = el("article", "jeu"); art.id = j.id;
+    const img = el("img"); img.src = j.image; img.alt = "Image de " + j.nom; img.width = 1280; img.height = 720; art.append(img);
+    const fiche = el("div", "fiche");
+    const g = el("div"); g.style.minWidth = "0";
+    g.append(el("h3", null, j.nom), el("div", "meta", [j.genre, "v" + j.version, j.taille].filter(Boolean).join("  ·  ")), el("p", null, j.description.split("\n\n")[0]));
+    if (j.points) { const ul = el("ul", "points"); for (const p of j.points) ul.append(el("li", null, p)); g.append(ul); }
+    const c = el("div", "cote");
+    const b1 = el("a", "bouton"); lien(b1, j.telechargement, "Télécharger " + j.nom);
+    const b2 = el("a", "bouton second", "Via le launcher"); b2.href = "#launcher";
+    c.append(b1, b2, el("span", "note", "Windows · " + (j.taille || "")));
+    fiche.append(g, c); art.append(fiche);
+    if (j.captures && j.captures.length) {
+      const caps = el("div", "captures");
+      j.captures.forEach((src, i) => {
+        const f = el("figure"); const im = el("img"); im.src = src; im.alt = "Capture de " + j.nom + " : " + (LEGENDES[i] || ""); im.loading = "lazy";
+        f.append(im); if (j.id === "zone7" && LEGENDES[i]) f.append(el("figcaption", null, LEGENDES[i]));
+        caps.append(f);
+      });
+      art.append(caps);
+    }
+    liste.append(art);
+  }
+}
+
+document.getElementById("annee").textContent = new Date().getFullYear();
+afficher(SECOURS);
+fetch("catalogue.json", { cache: "no-store" })
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(c => { if (c && Array.isArray(c.jeux)) afficher(c); })
+  .catch(() => {});
+document.addEventListener("click", e => { const a = e.target.closest('[aria-disabled="true"]'); if (a) e.preventDefault(); });
+</script>

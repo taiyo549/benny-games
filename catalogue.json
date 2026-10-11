@@ -1,0 +1,23 @@
+{
+  "launcher": {
+    "version": "1.0",
+    "taille": "33 Mo",
+    "telechargement": ""
+  },
+  "jeux": [
+    {
+      "id": "zone7",
+      "nom": "Zone 7",
+      "genre": "Survivor-like · PSX · Horreur",
+      "version": "1.0",
+      "taille": "36 Mo",
+      "sortie": "2026",
+      "description": "1987. Une ville fermée d'Ukraine soviétique, un réacteur qui a cessé d'être une machine. Tu es le liquidateur 4471 : survis à 20 vagues de mutants, de zombies de laboratoire et de cyborgs lunaires.\n\n3 cartes · 3 boss finaux · mode infini · 27 succès",
+      "points": ["3 cartes : la ville, le laboratoire Rassvet, la base lunaire Selena-7", "Un boss final par carte, avec une seconde phase", "Plus de 20 armes et capacités, améliorations permanentes", "Mode infini, 27 succès, français et anglais"],
+      "image": "images/zone7_couverture.jpg",
+      "captures": ["images/zone7_ville.jpg", "images/zone7_labo.jpg", "images/zone7_lune.jpg"],
+      "telechargement": "",
+      "executable": "Zone7.exe"
+    }
+  ]
+}
